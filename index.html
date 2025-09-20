@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>羽毛球活动费用计算器</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,100 +16,92 @@
             --light-color: #ecf0f1;
             --text-color: #333;
             --border-color: #bdc3c7;
+            --input-height: 44px;
+            --touch-target: 44px;
         }
         
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
+            font-size: 16px;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         
         header {
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 25px 20px;
+            padding: 20px 15px;
             text-align: center;
         }
         
         h1 {
             margin-bottom: 10px;
-            font-size: 2.2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
         
         .description {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             opacity: 0.95;
             max-width: 600px;
             margin: 0 auto;
         }
         
         .calculator {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 25px;
-            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
         }
         
-        @media (max-width: 900px) {
-            .calculator {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .input-section {
+        .input-section, .result-section {
             background: var(--light-color);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .result-section {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 2px solid var(--primary-color);
+            padding: 20px 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--dark-color);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--primary-color);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .section-title i {
             color: var(--primary-color);
+            font-size: 1.2rem;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         
         label {
@@ -120,20 +112,25 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.95rem;
         }
         
         label i {
             color: var(--primary-color);
             width: 20px;
+            font-size: 1rem;
         }
         
         input, select {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--border-color);
+            height: var(--input-height);
+            padding: 0 12px;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 16px;
             transition: border-color 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
         }
         
         input:focus, select:focus {
@@ -142,37 +139,53 @@
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
         
+        /* 移动端输入类型优化 */
+        input[type="number"] {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+        
+        /* 隐藏数字输入框的上下箭头 */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
         button {
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             color: white;
             border: none;
-            padding: 15px 25px;
+            padding: 0 20px;
+            height: var(--touch-target);
             border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 1rem;
             font-weight: 600;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 10px;
             transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         button:active {
-            transform: translateY(0);
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
         
         .result-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
             border-bottom: 1px dashed var(--border-color);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            flex-wrap: wrap;
         }
         
         .result-item:last-child {
@@ -181,10 +194,10 @@
         
         .total {
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: var(--primary-color);
-            margin-top: 20px;
-            padding-top: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
             border-top: 2px solid var(--border-color);
         }
         
@@ -205,80 +218,192 @@
         }
         
         .summary {
-            margin-top: 25px;
-            padding: 20px;
+            margin-top: 20px;
+            padding: 15px;
             background: #e8f4f8;
             border-radius: 8px;
-            border-left: 5px solid var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            font-size: 0.9rem;
         }
         
         .instructions {
-            padding: 20px;
+            padding: 15px;
             background: #fff8e6;
             border-radius: 8px;
-            margin-top: 25px;
-            font-size: 0.95rem;
-            border-left: 5px solid #ffc107;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            border-left: 4px solid #ffc107;
         }
         
         .instructions h4 {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--dark-color);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            font-size: 0.95rem;
         }
         
         .instructions p {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 6px;
+            line-height: 1.4;
         }
         
         .instructions i {
             color: var(--primary-color);
-            margin-top: 4px;
+            margin-top: 2px;
+            font-size: 0.8rem;
         }
         
         .cost-breakdown {
-            margin-top: 20px;
+            margin-top: 15px;
         }
         
         .cost-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 1rem;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
         
         .cost-per-person {
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 1px dashed var(--border-color);
             font-weight: 600;
         }
         
         footer {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             color: var(--dark-color);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             opacity: 0.8;
         }
         
         .note {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #666;
-            margin-top: 5px;
+            margin-top: 4px;
             font-style: italic;
+            line-height: 1.3;
         }
         
         .highlight {
             background-color: #fffacd;
-            padding: 2px 5px;
+            padding: 2px 4px;
             border-radius: 3px;
             font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        /* 移动端优化 */
+        @media (min-width: 768px) {
+            .calculator {
+                display: grid;
+                grid-template-columns: 1.2fr 0.8fr;
+                gap: 25px;
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .description {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            header {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+                margin-bottom: 8px;
+            }
+            
+            .description {
+                font-size: 0.85rem;
+            }
+            
+            .calculator {
+                padding: 15px 10px;
+                gap: 15px;
+            }
+            
+            .input-section, .result-section {
+                padding: 15px 10px;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 12px;
+            }
+            
+            .form-group {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+            
+            label {
+                font-size: 0.9rem;
+            }
+            
+            input, select {
+                height: 40px;
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+            
+            button {
+                height: 44px;
+                font-size: 1rem;
+            }
+            
+            .result-item {
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* 防止iOS输入框缩放 */
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            select,
+            textarea,
+            input {
+                font-size: 16px;
+            }
+        }
+        
+        /* 横屏优化 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+        
+        /* 防止长按菜单 */
+        .no-context-menu {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
     </style>
 </head>
@@ -295,73 +420,75 @@
                 
                 <div class="form-group">
                     <label for="insiders"><i class="fas fa-user-friends"></i> 自己人数量</label>
-                    <input type="number" id="insiders" min="0" value="2">
+                    <input type="number" id="insiders" min="0" value="2" inputmode="numeric">
                 </div>
                 
                 <div class="form-group">
                     <label for="outsiders"><i class="fas fa-users"></i> 外来人数量</label>
-                    <input type="number" id="outsiders" min="0" value="4">
+                    <input type="number" id="outsiders" min="0" value="4" inputmode="numeric">
                 </div>
                 
                 <div class="form-group">
                     <label for="registration-fee"><i class="fas fa-ticket-alt"></i> 统一报名费 (元/人)</label>
-                    <input type="number" id="registration-fee" min="0" value="26">
+                    <input type="number" id="registration-fee" min="0" value="26" inputmode="decimal">
                     <div class="note">注：报名费不包括球费，自己人和外来人费用一致</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="court-fee"><i class="fas fa-map-marked-alt"></i> 场地费 (元/小时)</label>
-                    <input type="number" id="court-fee" min="0" value="48">
+                    <input type="number" id="court-fee" min="0" value="48" inputmode="decimal">
                 </div>
                 
                 <div class="form-group">
                     <label for="court-hours"><i class="fas fa-clock"></i> 场地使用时间 (小时)</label>
-                    <input type="number" id="court-hours" min="0" step="0.5" value="2">
+                    <input type="number" id="court-hours" min="0" step="0.5" value="2" inputmode="decimal">
                 </div>
                 
                 <div class="form-group">
                     <label for="shuttlecock-price"><i class="fas fa-money-bill-wave"></i> 羽毛球价格 (元/筒)</label>
-                    <input type="number" id="shuttlecock-price" min="0" value="228">
+                    <input type="number" id="shuttlecock-price" min="0" value="228" inputmode="decimal">
                 </div>
                 
                 <div class="form-group">
                     <label for="shuttlecocks-per-tube"><i class="fas fa-database"></i> 每筒球数量 (个)</label>
-                    <input type="number" id="shuttlecocks-per-tube" min="1" value="12">
+                    <input type="number" id="shuttlecocks-per-tube" min="1" value="12" inputmode="numeric">
                 </div>
                 
                 <div class="form-group">
                     <label for="shuttlecocks-used"><i class="fas fa-table-tennis-paddle-ball"></i> 使用羽毛球数量 (个)</label>
-                    <input type="number" id="shuttlecocks-used" min="0" value="2">
+                    <input type="number" id="shuttlecocks-used" min="0" value="2" inputmode="numeric">
                 </div>
                 
                 <div class="form-group">
                     <label for="withdrawal-fee"><i class="fas fa-credit-card"></i> 提现费 (固定金额，元)</label>
-                    <input type="number" id="withdrawal-fee" min="0" value="2">
+                    <input type="number" id="withdrawal-fee" min="0" value="2" inputmode="decimal">
                 </div>
                 
                 <div class="form-group">
                     <label for="other-fees"><i class="fas fa-receipt"></i> 其他费用 (元)</label>
-                    <input type="number" id="other-fees" min="0" value="0">
+                    <input type="number" id="other-fees" min="0" value="0" inputmode="decimal">
                 </div>
                 
-                <button id="calculate-btn"><i class="fas fa-calculator"></i> 计算费用</button>
+                <button id="calculate-btn">
+                    <i class="fas fa-calculator"></i> 计算费用
+                </button>
             </div>
             
             <div class="result-section">
                 <h2 class="section-title"><i class="fas fa-chart-pie"></i> 费用明细</h2>
                 
                 <div class="result-item">
-                    <span>自己人报名费收入:</span>
+                    <span>自己人报名费:</span>
                     <span id="insider-income" class="insider">0.00 元</span>
                 </div>
                 
                 <div class="result-item">
-                    <span>外来人报名费收入:</span>
+                    <span>外来人报名费:</span>
                     <span id="outsider-income" class="outsider">0.00 元</span>
                 </div>
                 
                 <div class="result-item">
-                    <span>外来人球费收入:</span>
+                    <span>外来人球费:</span>
                     <span id="outsider-shuttlecock-income" class="outsider">0.00 元</span>
                 </div>
                 
@@ -377,11 +504,11 @@
                         <span id="court-cost">0.00 元</span>
                     </div>
                     <div class="cost-item">
-                        <span>球费 (按个数):</span>
+                        <span>球费:</span>
                         <span id="shuttlecock-cost">0.00 元</span>
                     </div>
                     <div class="cost-item">
-                        <span>提现费 (固定):</span>
+                        <span>提现费:</span>
                         <span id="withdrawal-fee-cost">0.00 元</span>
                     </div>
                     <div class="cost-item">
@@ -401,45 +528,43 @@
                 </div>
                 
                 <div class="result-item cost-per-person insider">
-                    <span>自己人每人应返还:</span>
+                    <span>自己人每人返还:</span>
                     <span id="insider-refund">0.00 元</span>
                 </div>
                 
                 <div class="result-item cost-per-person">
-                    <span>自己人每人实际支付:</span>
+                    <span>自己人实付:</span>
                     <span id="insider-actual">0.00 元</span>
                 </div>
                 
                 <div class="result-item cost-per-person">
-                    <span>外来人实际支付:</span>
+                    <span>外来人实付:</span>
                     <span id="outsider-actual" class="outsider">0.00 元</span>
                 </div>
                 
                 <div class="summary">
                     <h3><i class="fas fa-info-circle"></i> 费用总结</h3>
-                    <p id="summary-text">请输入参数并点击计算按钮</p>
+                    <p id="summary-text">请输入参数查看计算结果</p>
                 </div>
                 
                 <div class="instructions">
                     <h4><i class="fas fa-lightbulb"></i> 使用说明</h4>
                     <p><i class="fas fa-check-circle"></i> 报名费统一，不包括球费</p>
-                    <p><i class="fas fa-check-circle"></i> 外来人需要额外支付球费均摊部分</p>
-                    <p><i class="fas fa-check-circle"></i> 总收入 = 报名费 + 外来人球费均摊</p>
-                    <p><i class="fas fa-check-circle"></i> 净收入将分给自己人（作为返还费用）</p>
-                    <p><i class="fas fa-check-circle"></i> 外来人不参与收入分配</p>
+                    <p><i class="fas fa-check-circle"></i> 外来人需要额外支付球费</p>
+                    <p><i class="fas fa-check-circle"></i> 总收入包含外来人球费</p>
+                    <p><i class="fas fa-check-circle"></i> 净收入分给自己人</p>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>© 2025 羽毛球活动费用计算器 | 统一报名费 + 外来人球费均摊 | 收入分给自己人</p>
+            <p>© 2023 羽毛球活动费用计算器 | 移动端优化版</p>
         </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const calculateBtn = document.getElementById('calculate-btn');
-            calculateBtn.addEventListener('click', calculateCosts);
             
             // 初始计算一次
             calculateCosts();
@@ -448,6 +573,13 @@
             const inputs = document.querySelectorAll('input');
             inputs.forEach(input => {
                 input.addEventListener('input', calculateCosts);
+                input.addEventListener('blur', calculateCosts);
+            });
+            
+            // 防止移动端表单提交
+            document.querySelector('form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateCosts();
             });
             
             function calculateCosts() {
@@ -514,11 +646,11 @@
                 // 更新总结文本
                 const summaryText = document.getElementById('summary-text');
                 if (netIncome > 0) {
-                    summaryText.innerHTML = `本次活动有 <strong class="insider">${insiders} 位自己人</strong> 和 <strong class="outsider">${outsiders} 位外来人</strong> 参加，总收入 <strong>${totalIncome.toFixed(2)}</strong> 元（包含外来人球费均摊 <span class="highlight">${outsiderShuttlecockIncome.toFixed(2)}</span> 元），总支出 <strong>${totalCost.toFixed(2)}</strong> 元，净收入 <strong>${netIncome.toFixed(2)}</strong> 元，每位自己人可返还 <strong class="insider">${insiderRefundPerPerson.toFixed(2)}</strong> 元，实际支付 <strong>${insiderActualPayment.toFixed(2)}</strong> 元。`;
+                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，净收入 <strong>${netIncome.toFixed(2)}元</strong>，每位自己人返还 <span class="insider">${insiderRefundPerPerson.toFixed(2)}元</span>。`;
                 } else if (netIncome < 0) {
-                    summaryText.innerHTML = `本次活动有 <strong class="insider">${insiders} 位自己人</strong> 和 <strong class="outsider">${outsiders} 位外来人</strong> 参加，总收入 <strong>${totalIncome.toFixed(2)}</strong> 元（包含外来人球费均摊 <span class="highlight">${outsiderShuttlecockIncome.toFixed(2)}</span> 元），总支出 <strong>${totalCost.toFixed(2)}</strong> 元，亏损 <strong class="negative">${Math.abs(netIncome).toFixed(2)}</strong> 元，需要考虑增加报名费或减少支出。`;
+                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，亏损 <strong class="negative">${Math.abs(netIncome).toFixed(2)}元</strong>。`;
                 } else {
-                    summaryText.innerHTML = `本次活动有 <strong class="insider">${insiders} 位自己人</strong> 和 <strong class="outsider">${outsiders} 位外来人</strong> 参加，总收入 <strong>${totalIncome.toFixed(2)}</strong> 元（包含外来人球费均摊 <span class="highlight">${outsiderShuttlecockIncome.toFixed(2)}</span> 元），总支出 <strong>${totalCost.toFixed(2)}</strong> 元，收支平衡。`;
+                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，收支平衡。`;
                 }
             }
         });
