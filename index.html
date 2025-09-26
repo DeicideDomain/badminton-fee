@@ -617,7 +617,7 @@
                 
                 // 净收入分给自己人
                 const insiderRefundPerPerson = insiders > 0 ? netIncome / insiders : 0;
-                const insiderActualPayment = registrationFee + shuttlecockCostPerPerson - insiderRefundPerPerson;
+                const insiderActualPayment = registrationFee - insiderRefundPerPerson;
                 const outsiderActualPayment = registrationFee + shuttlecockCostPerPerson;
                 
                 // 更新结果显示
