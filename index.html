@@ -625,7 +625,7 @@
                 const netIncome = totalIncome - totalCost;
                 
                 // 净收入分给自己人
-                const insiderRefund= (courtCost - outsiderIncome + withdrawalFee) / insiders
+                const insiderRefund= totalParticipants > 0 ? (courtCost - outsiderIncome + withdrawalFee) / insiders : 0;
                 const insiderRefundPerPerson = insiders > 0 ? netIncome / insiders : 0;
                 const insiderActualPayment = registrationFee - insiderRefundPerPerson;
                 const outsiderActualPayment = registrationFee + shuttlecockCostPerPerson;
