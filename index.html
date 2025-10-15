@@ -411,7 +411,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-table-tennis-paddle-ball"></i> 羽毛球活动费用计算器</h1>
-            <p class="description">统一报名费 + 外来人球费均摊，收入分给自己人</p>
+            <p class="description">统一报名费 + 球费均摊，收入分给自己人</p>
         </header>
         
         <div class="calculator">
@@ -430,7 +430,7 @@
                 
                 <div class="form-group">
                     <label for="registration-fee"><i class="fas fa-ticket-alt"></i> 统一报名费 (元/人)</label>
-                    <input type="number" id="registration-fee" min="0" value="26" inputmode="decimal">
+                    <input type="number" id="registration-fee" min="0" value="28" inputmode="decimal">
                     <div class="note">注：报名费不包括球费，自己人和外来人费用一致</div>
                 </div>
                 
@@ -488,7 +488,7 @@
                 </div>
                 
                 <div class="result-item">
-                    <span>外来人球费:</span>
+                    <span>每人球费:</span>
                     <span id="outsider-shuttlecock-income" class="outsider">0.00 元</span>
                 </div>
                 
@@ -531,7 +531,17 @@
                     <span>自己人每人返还:</span>
                     <span id="insider-refund">0.00 元</span>
                 </div>
+
+                <div class="result-item cost-per-person insider">
+                    <span>自己人每人球费:</span>
+                    <span id="insider-ball-fee">0.00 元</span>
+                </div>
                 
+                <div class="result-item cost-per-person insider">
+                    <span>结余:</span>
+                    <span id="insider-surplus">0.00 元</span>
+                </div>
+
                 <div class="result-item cost-per-person">
                     <span>自己人实付:</span>
                     <span id="insider-actual">0.00 元</span>
@@ -554,11 +564,11 @@
                     <p><i class="fas fa-check-circle"></i> 总收入包含外来人球费</p>
                     <p><i class="fas fa-check-circle"></i> 净收入分给自己人</p>
                 </div>
-            </div>
+            </>
         </div>
         
         <footer>
-            <p>© 2025 羽毛球活动费用计算器</p>
+            <p>© 2025 羽毛球活动费用计算器 | 移动端优化版</p>
         </footer>
     </div>
 
@@ -611,25 +621,28 @@
                 
                 // 总收入 = 报名费 + 外来人球费
                 const totalIncome = insiderIncome + outsiderIncome + outsiderShuttlecockIncome;
-                
                 const totalCost = courtCost + shuttlecockCost + withdrawalFee + otherFees;
                 const netIncome = totalIncome - totalCost;
                 
                 // 净收入分给自己人
+                const insiderRefund= (courtCost - outsiderIncome + withdrawalFee) / insiders
                 const insiderRefundPerPerson = insiders > 0 ? netIncome / insiders : 0;
                 const insiderActualPayment = registrationFee - insiderRefundPerPerson;
                 const outsiderActualPayment = registrationFee + shuttlecockCostPerPerson;
+                
                 
                 // 更新结果显示
                 document.getElementById('insider-income').textContent = insiderIncome.toFixed(2) + ' 元';
                 document.getElementById('outsider-income').textContent = outsiderIncome.toFixed(2) + ' 元';
                 document.getElementById('outsider-shuttlecock-income').textContent = outsiderShuttlecockIncome.toFixed(2) + ' 元';
+                document.getElementById('insider-ball-fee').textContent = outsiderShuttlecockIncome.toFixed(2) + ' 元';
                 document.getElementById('total-income').textContent = totalIncome.toFixed(2) + ' 元';
                 document.getElementById('court-cost').textContent = courtCost.toFixed(2) + ' 元';
                 document.getElementById('shuttlecock-cost').textContent = shuttlecockCost.toFixed(2) + ' 元';
                 document.getElementById('withdrawal-fee-cost').textContent = withdrawalFee.toFixed(2) + ' 元';
                 document.getElementById('other-cost').textContent = otherFees.toFixed(2) + ' 元';
                 document.getElementById('total-cost').textContent = totalCost.toFixed(2) + ' 元';
+                document.getElementById('insider-refund').textContent = insiderRefund.toFixed(2) + ' 元';
                 
                 const netIncomeElement = document.getElementById('net-income');
                 netIncomeElement.textContent = netIncome.toFixed(2) + ' 元';
@@ -639,14 +652,14 @@
                     netIncomeElement.className = 'result-item total positive';
                 }
                 
-                document.getElementById('insider-refund').textContent = insiderRefundPerPerson.toFixed(2) + ' 元';
+                document.getElementById('insider-surplus').textContent = insiderRefundPerPerson.toFixed(2) + ' 元';
                 document.getElementById('insider-actual').textContent = insiderActualPayment.toFixed(2) + ' 元';
                 document.getElementById('outsider-actual').textContent = outsiderActualPayment.toFixed(2) + ' 元';
                 
                 // 更新总结文本
                 const summaryText = document.getElementById('summary-text');
                 if (netIncome > 0) {
-                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，净收入 <strong>${netIncome.toFixed(2)}元</strong>，每位自己人返还 <span class="insider">${insiderRefundPerPerson.toFixed(2)}元</span>。`;
+                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，净收入 <strong>${netIncome.toFixed(2)}元</strong>，每位自己人结余 <span class="insider">${insiderRefundPerPerson.toFixed(2)}元</span>。`;
                 } else if (netIncome < 0) {
                     summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，亏损 <strong class="negative">${Math.abs(netIncome).toFixed(2)}元</strong>。`;
                 } else {
