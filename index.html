@@ -464,11 +464,6 @@
                     <input type="number" id="withdrawal-fee" min="0" value="2" inputmode="decimal">
                 </div>
                 
-                <div class="form-group">
-                    <label for="other-fees"><i class="fas fa-receipt"></i> 其他费用 (元)</label>
-                    <input type="number" id="other-fees" min="0" value="0" inputmode="decimal">
-                </div>
-                
                 <button id="calculate-btn">
                     <i class="fas fa-calculator"></i> 计算费用
                 </button>
@@ -485,15 +480,10 @@
                 <div class="result-item">
                     <span>外来人报名费:</span>
                     <span id="outsider-income" class="outsider">0.00 元</span>
-                </div>
-                
-                <div class="result-item">
-                    <span>每人球费:</span>
-                    <span id="outsider-shuttlecock-income" class="outsider">0.00 元</span>
-                </div>
+                </div>   
                 
                 <div class="result-item total">
-                    <span>总收入:</span>
+                    <span>报名收入:</span>
                     <span id="total-income">0.00 元</span>
                 </div>
                 
@@ -522,24 +512,14 @@
                     <span id="total-cost">0.00 元</span>
                 </div>
                 
-                <div class="result-item total">
-                    <span>净收入:</span>
-                    <span id="net-income">0.00 元</span>
-                </div>
-                
                 <div class="result-item cost-per-person insider">
                     <span>自己人每人返还:</span>
                     <span id="insider-refund">0.00 元</span>
                 </div>
 
                 <div class="result-item cost-per-person insider">
-                    <span>自己人每人球费:</span>
+                    <span>每人球费:</span>
                     <span id="insider-ball-fee">0.00 元</span>
-                </div>
-                
-                <div class="result-item cost-per-person insider">
-                    <span>结余:</span>
-                    <span id="insider-surplus">0.00 元</span>
                 </div>
 
                 <div class="result-item cost-per-person">
@@ -560,8 +540,8 @@
                 <div class="instructions">
                     <h4><i class="fas fa-lightbulb"></i> 使用说明</h4>
                     <p><i class="fas fa-check-circle"></i> 报名费统一，不包括球费</p>
-                    <p><i class="fas fa-check-circle"></i> 外来人需要额外支付球费</p>
-                    <p><i class="fas fa-check-circle"></i> 总收入包含外来人球费</p>
+                    <p><i class="fas fa-check-circle"></i> 球费所有人统一另外支付</p>
+                    <p><i class="fas fa-check-circle"></i> 总收入不包含外来人球费</p>
                     <p><i class="fas fa-check-circle"></i> 净收入分给自己人</p>
                 </div>
             </>
@@ -603,7 +583,6 @@
                 const shuttlecocksPerTube = parseInt(document.getElementById('shuttlecocks-per-tube').value) || 1;
                 const shuttlecocksUsed = parseInt(document.getElementById('shuttlecocks-used').value) || 0;
                 const withdrawalFee = parseFloat(document.getElementById('withdrawal-fee').value) || 0;
-                const otherFees = parseFloat(document.getElementById('other-fees').value) || 0;
                 
                 // 计算各项费用
                 const insiderIncome = insiders * registrationFee;
@@ -616,54 +595,42 @@
                 
                 // 计算外来人需要支付的球费（按人数均摊）
                 const totalParticipants = insiders + outsiders;
-                const shuttlecockCostPerPerson = totalParticipants > 0 ? shuttlecockCost / totalParticipants : 0;
+                const shuttlecockCostPerPerson = totalParticipants > 0 ? (shuttlecockCost / totalParticipants) : 0;
                 const outsiderShuttlecockIncome = outsiders * shuttlecockCostPerPerson;
                 
-                // 总收入 = 报名费 + 外来人球费
-                const totalIncome = insiderIncome + outsiderIncome + outsiderShuttlecockIncome;
-                const totalCost = courtCost + shuttlecockCost + withdrawalFee + otherFees;
+                // 总收入 = 报名费
+                const totalIncome = insiderIncome + outsiderIncome;
+                const totalCost = courtCost + shuttlecockCost + withdrawalFee;
                 const netIncome = totalIncome - totalCost;
                 
                 // 净收入分给自己人
-                const insiderRefund= insiders > 0 ? (courtCost - outsiderIncome + withdrawalFee) / insiders : 0;
-                const insiderRefundPerPerson = insiders > 0 ? netIncome / insiders : 0;
-                const insiderActualPayment = registrationFee - insiderRefundPerPerson;
+                // 每个人返还
+                const insiderRefund= insiders > 0 ? (totalIncome - courtCost - withdrawalFee) / insiders : 0;
+                const insiderActualPayment = registrationFee - insiderRefund + shuttlecockCostPerPerson;
                 const outsiderActualPayment = registrationFee + shuttlecockCostPerPerson;
                 
                 
                 // 更新结果显示
                 document.getElementById('insider-income').textContent = insiderIncome.toFixed(2) + ' 元';
                 document.getElementById('outsider-income').textContent = outsiderIncome.toFixed(2) + ' 元';
-                document.getElementById('outsider-shuttlecock-income').textContent = outsiderShuttlecockIncome.toFixed(2) + ' 元';
-                document.getElementById('insider-ball-fee').textContent = outsiderShuttlecockIncome.toFixed(2) + ' 元';
+                document.getElementById('insider-ball-fee').textContent = shuttlecockCostPerPerson.toFixed(2) + ' 元';
                 document.getElementById('total-income').textContent = totalIncome.toFixed(2) + ' 元';
                 document.getElementById('court-cost').textContent = courtCost.toFixed(2) + ' 元';
                 document.getElementById('shuttlecock-cost').textContent = shuttlecockCost.toFixed(2) + ' 元';
                 document.getElementById('withdrawal-fee-cost').textContent = withdrawalFee.toFixed(2) + ' 元';
-                document.getElementById('other-cost').textContent = otherFees.toFixed(2) + ' 元';
                 document.getElementById('total-cost').textContent = totalCost.toFixed(2) + ' 元';
-                document.getElementById('insider-refund').textContent = insiderRefund.toFixed(2) + ' 元';
+                document.getElementById('insider-refund').textContent = insiderRefund.toFixed(2) + ' 元';                              
                 
-                const netIncomeElement = document.getElementById('net-income');
-                netIncomeElement.textContent = netIncome.toFixed(2) + ' 元';
-                if (netIncome < 0) {
-                    netIncomeElement.className = 'result-item total negative';
-                } else {
-                    netIncomeElement.className = 'result-item total positive';
-                }
-                
-                document.getElementById('insider-surplus').textContent = insiderRefundPerPerson.toFixed(2) + ' 元';
                 document.getElementById('insider-actual').textContent = insiderActualPayment.toFixed(2) + ' 元';
                 document.getElementById('outsider-actual').textContent = outsiderActualPayment.toFixed(2) + ' 元';
                 
                 // 更新总结文本
                 const summaryText = document.getElementById('summary-text');
                 if (netIncome > 0) {
-                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，净收入 <strong>${netIncome.toFixed(2)}元</strong>，每位自己人结余 <span class="insider">${insiderRefundPerPerson.toFixed(2)}元</span>。`;
-                } else if (netIncome < 0) {
-                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，亏损 <strong class="negative">${Math.abs(netIncome).toFixed(2)}元</strong>。`;
-                } else {
-                    summaryText.innerHTML = `有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，总收入 <strong>${totalIncome.toFixed(2)}元</strong>，收支平衡。`;
+                    summaryText.innerHTML = `
+                    有 <span class="insider">${insiders}位自己人</span> 和 <span class="outsider">${outsiders}位外来人</span>，
+                    每人球费 <strong>${shuttlecockCostPerPerson.toFixed(2)}元</strong>，
+                    每个自己人可返还 <span class="insider">${insiderRefund.toFixed(2)}元</span>。`;
                 }
             }
         });
